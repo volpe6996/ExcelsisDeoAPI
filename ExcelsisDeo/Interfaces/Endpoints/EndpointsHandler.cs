@@ -7,4 +7,9 @@
     {
         ValueTask<IResult> HandleAsync(TRequest request, CancellationToken cancellationToken);
     }
+
+    public interface IRequestHandler
+    {
+        ValueTask<IResult> HandleAsync(CancellationToken cancellationToken);
+    }
 }

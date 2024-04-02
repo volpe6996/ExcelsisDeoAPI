@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExcelsisDeo.Persistence
 {
-    internal static class Extensions
+    internal static class PersistenceExtensions
     {
         internal static void ConfigurePersistence(this IServiceCollection services, IConfiguration configuration)
         {

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExcelsisDeo.Endpoints
 {
-    public record RegisterRequestBody(string fullName, string email, string phoneNumber, string password) : IRequest;
+    public record RegisterRequestBody(string fullName, string email, string phoneNumber, string password, string city, string postalCode, string street) : IRequest;
 
     public class RegisterUserEndpoint : IEndpoint
     {
@@ -45,7 +45,8 @@ namespace ExcelsisDeo.Endpoints
 
             if (!validationResult.IsValid)
                 return Results.BadRequest(ValidationErrorPraser.Prase(validationResult.Errors));
-
+                // return Results.BadRequest("Coś poszło nie tak, spróbuj ponownie.");
+                
             var isEmailAlreadyExists = await _appDbContext.Users.AnyAsync(u => u.Email == request.email, cancellationToken);
 
             if (isEmailAlreadyExists)
@@ -60,7 +61,17 @@ namespace ExcelsisDeo.Endpoints
                 PasswordHash = _passwordHasher.HashPassword(request.password),
             };
 
+            var adreess = new Address()
+            {
+                Id = Guid.NewGuid(),
+                City = request.city,
+                PostalCode = request.postalCode,
+                Street = request.street,
+                UserId = user.Id
+            };
+
             await _appDbContext.Users.AddAsync(user, cancellationToken);
+            await _appDbContext.Addresses.AddAsync(adreess, cancellationToken);
             await _appDbContext.SaveChangesAsync(cancellationToken);
 
             return Results.NoContent();
@@ -71,6 +82,9 @@ namespace ExcelsisDeo.Endpoints
     {
         public RegisterRequestBodyValidator()
         {
+            RuleFor(u => u.fullName)
+                .NotEmpty();
+            
             RuleFor(u => u.email)
                 .MaximumLength(48)
                 .Must(e => e.Any(IsAtSign))
@@ -88,6 +102,15 @@ namespace ExcelsisDeo.Endpoints
                 .Must(password => password.Any(char.IsDigit))
                 .Must(password => password.Any(IsSpecialChar))
                 .WithMessage("Zbyt słabe hasło");
+
+            RuleFor(u => u.city)
+                .NotEmpty();
+            
+            RuleFor(u => u.postalCode)
+                .NotEmpty();
+            
+            RuleFor(u => u.street)
+                .NotEmpty();
         }
 
         private bool IsSpecialChar(char c)

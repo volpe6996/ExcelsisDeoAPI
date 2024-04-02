@@ -2,7 +2,7 @@
 
 namespace ExcelsisDeo.Authorization
 {
-    internal static class Extensions
+    internal static class AuthorizationExtensions
     {
         public static void ConfigureAuthorization(this IServiceCollection services)
         {
