@@ -18,7 +18,7 @@ public class AddCategoryEndpoint : IEndpoint
                         [FromServices] IRequestHandler<AddCategoryRequestBody> addCategoryRequestHandler,
                         CancellationToken cancellationToken)
                     => await (addCategoryRequestHandler.HandleAsync(addCategoryRequestBody, cancellationToken)))
-            .RequireAuthorization(AuthoriaztionPolicy.Admin)
+            .RequireAuthorization(AuthorizationPolicy.Admin)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized);
