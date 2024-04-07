@@ -1,7 +1,7 @@
 # Excelsis Deo Shop API
 ASP.NET Core Web API written in .NET 7
 
-##Latest developed version is under dev branch
+## Latest developed version is under dev branch
 
 ## Setup
 To run this project you will need:
