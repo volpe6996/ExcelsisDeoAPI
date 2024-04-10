@@ -16,7 +16,7 @@ namespace ExcelsisDeo.Endpoints
         public void Configure(IEndpointRouteBuilder endpoint)
         {
             endpoint.MapPost("/api/register/",
-                    async ([FromBody] RegisterRequestBody registerRequestBody,
+                    async ([AsParameters] RegisterRequestBody registerRequestBody,
                             [FromServices] IRequestHandler<RegisterRequestBody> registerRequestHandler,
                             CancellationToken cancellationToken)
                         => await (registerRequestHandler.HandleAsync(registerRequestBody, cancellationToken)))
@@ -44,8 +44,8 @@ namespace ExcelsisDeo.Endpoints
             var validationResult = await  _validator.ValidateAsync(request);
 
             if (!validationResult.IsValid)
-                return Results.BadRequest(ValidationErrorPraser.Prase(validationResult.Errors));
-                // return Results.BadRequest("Coś poszło nie tak, spróbuj ponownie.");
+                // return Results.BadRequest(ValidationErrorPraser.Prase(validationResult.Errors));
+                return Results.BadRequest("Podane dane są nieprawidłowe, spróbuj ponownie!");
                 
             var isEmailAlreadyExists = await _appDbContext.Users.AnyAsync(u => u.Email == request.email, cancellationToken);
 

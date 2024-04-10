@@ -8,6 +8,17 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var ExcelsisDeoOrigins = "_excelsisDeoOrigins"; 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: ExcelsisDeoOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowCredentials();
+        });
+});
+
 builder.Services.ConfigureValidation();
 builder.Services.ConfigurePersistence(builder.Configuration);
 builder.Services.ConfigureAuthentication(builder.Configuration);
@@ -26,6 +37,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(ExcelsisDeoOrigins);
 
 app.UseAuthentication();
 app.UseAuthorization();

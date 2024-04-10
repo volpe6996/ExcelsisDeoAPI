@@ -1,14 +1,16 @@
 using ExcelsisDeo.Authorization;
 using ExcelsisDeo.Interfaces;
 using ExcelsisDeo.Interfaces.Endpoints;
+using ExcelsisDeo.Migrations;
 using ExcelsisDeo.Persistence.Entities;
+using ExcelsisDeo.Validation;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExcelsisDeo.Endpoints.Products;
 
-public record AddProductRequestBody(string name, string description, decimal price, uint inStockQuantity, Guid categoryId) : IRequest;
+public record AddProductRequestBody(string name, string description, decimal price, uint inStockQuantity, Guid categoryId, string photo) : IRequest;
 
 public class AddProductEndpoint : IEndpoint
 {
@@ -41,7 +43,7 @@ public class AddProductRequestHandler : IRequestHandler<AddProductRequestBody>
         var validationResult = _validator.Validate(request);
 
         if (!validationResult.IsValid)
-            return Results.BadRequest();
+            return Results.BadRequest("Błąd walidacji");
 
         var product = new Product()
         {
@@ -50,7 +52,8 @@ public class AddProductRequestHandler : IRequestHandler<AddProductRequestBody>
             Description = request.description,
             Price = request.price,
             InStockQuantity = request.inStockQuantity,
-            CategoryId = request.categoryId
+            CategoryId = request.categoryId,
+            Photo = request.photo,
         };
 
         await _appDbContext.Products.AddAsync(product);

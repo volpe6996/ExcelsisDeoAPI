@@ -22,7 +22,7 @@ namespace ExcelsisDeo.Authentication
         {
             var claims = new[]
             {
-            new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
         };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecureKey));

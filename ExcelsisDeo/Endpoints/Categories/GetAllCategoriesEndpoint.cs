@@ -29,7 +29,9 @@ public class GetAllCategoriesHandler : IRequestHandler
     public async ValueTask<IResult> HandleAsync(CancellationToken cancellationToken)
     {
         var categories =
-            await _appDbContext.Categories.Select(c => new { c.Id, c.Name }).ToListAsync(cancellationToken);
+            await _appDbContext.Categories
+                .Select(c => new { c.Id, c.Name })
+                .ToListAsync(cancellationToken);
         
         return categories == null
             ? Results.NoContent()

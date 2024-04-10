@@ -20,7 +20,7 @@ namespace ExcelsisDeo.Authorization
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, RegisteredUserRoleRequirement requirement)
         {
-            var idClaim = context.User.FindFirst(JwtRegisteredClaimNames.Jti);
+            var idClaim = context.User.FindFirst(JwtRegisteredClaimNames.Sub);
             if (idClaim is null || !Guid.TryParse(idClaim.Value, out var id)) return;
 
             if (!await _dbContext.Users.AnyAsync(x => x.Id == id))

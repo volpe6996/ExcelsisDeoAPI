@@ -12,7 +12,7 @@ public class LoginUserEndpoint : IEndpoint
     public void Configure(IEndpointRouteBuilder endpoint)
     {
         endpoint.MapPost("/api/login/",
-                async ([FromBody] LoginUserRequestBody loginUserRequestBody,
+                async ([AsParameters] LoginUserRequestBody loginUserRequestBody,
                         [FromServices] IRequestHandler<LoginUserRequestBody> loginUserRequestHandler,
                         CancellationToken cancellationToken)
                     => await (loginUserRequestHandler.HandleAsync(loginUserRequestBody, cancellationToken)))
@@ -44,6 +44,6 @@ public class LoginUserRequestHandler : IRequestHandler<LoginUserRequestBody>
 
         var token = _tokenProvider.GetAccessToken(user);
 
-        return Results.Ok(token);
+        return Results.Ok(new {token, user.Role});
     }
 }
