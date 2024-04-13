@@ -21,7 +21,7 @@ public class AddProductEndpoint : IEndpoint
                         [FromServices] IRequestHandler<AddProductRequestBody> addProductRequestHandler,
                         CancellationToken cancellationToken)
                     => await (addProductRequestHandler.HandleAsync(addProductRequestBody, cancellationToken)))
-            .RequireAuthorization(AuthorizationPolicy.Admin)
+            // .RequireAuthorization(AuthorizationPolicy.Admin)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest);
     }
