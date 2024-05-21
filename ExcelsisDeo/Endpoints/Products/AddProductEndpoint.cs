@@ -17,11 +17,12 @@ public class AddProductEndpoint : IEndpoint
     public void Configure(IEndpointRouteBuilder endpoint)
     {
         endpoint.MapPost("/api/product/",
-                async ([FromBody] AddProductRequestBody addProductRequestBody,
+                async ([AsParameters] AddProductRequestBody addProductRequestBody,
                         [FromServices] IRequestHandler<AddProductRequestBody> addProductRequestHandler,
                         CancellationToken cancellationToken)
                     => await (addProductRequestHandler.HandleAsync(addProductRequestBody, cancellationToken)))
             // .RequireAuthorization(AuthorizationPolicy.Admin)
+            .WithTags("Products")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest);
     }
@@ -67,9 +68,9 @@ public class AddProductRequestBodyValidator : AbstractValidator<AddProductReques
 {
     public AddProductRequestBodyValidator()
     {
-        RuleFor(p => p.name).NotEmpty().WithMessage("1");
-        RuleFor(p => p.description).NotEmpty().WithMessage("2");
-        RuleFor(p => p.price).GreaterThanOrEqualTo(0).WithMessage("3");
-        RuleFor(p => p.categoryId).NotEmpty().WithMessage("4");
+        RuleFor(p => p.name).NotEmpty();
+        RuleFor(p => p.description).NotEmpty();
+        RuleFor(p => p.price).GreaterThanOrEqualTo(0);
+        RuleFor(p => p.categoryId).NotEmpty();
     }
 }

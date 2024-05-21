@@ -20,6 +20,7 @@ namespace ExcelsisDeo.Endpoints
                             [FromServices] IRequestHandler<RegisterRequestBody> registerRequestHandler,
                             CancellationToken cancellationToken)
                         => await (registerRequestHandler.HandleAsync(registerRequestBody, cancellationToken)))
+                .WithTags("Users")
                 .Produces(StatusCodes.Status204NoContent)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status409Conflict);

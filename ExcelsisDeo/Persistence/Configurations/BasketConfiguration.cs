@@ -21,7 +21,10 @@ namespace ExcelsisDeo.Persistence.Configurations
             builder.Property(x => x.Quantity).IsRequired();
             builder.Property(x => x.ProductId).IsRequired();
 
-            builder.HasOne(x => x.Basket).WithMany(z => z.BasketItems).HasForeignKey(x => x.BasketId);
+            builder
+                .HasOne(x => x.Basket)
+                .WithMany(z => z.BasketItems)
+                .HasForeignKey(x => x.BasketId);
         }
     }
 }

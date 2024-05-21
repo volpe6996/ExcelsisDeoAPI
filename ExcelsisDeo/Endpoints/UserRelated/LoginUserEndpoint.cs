@@ -16,6 +16,7 @@ public class LoginUserEndpoint : IEndpoint
                         [FromServices] IRequestHandler<LoginUserRequestBody> loginUserRequestHandler,
                         CancellationToken cancellationToken)
                     => await (loginUserRequestHandler.HandleAsync(loginUserRequestBody, cancellationToken)))
+            .WithTags("Users")
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest);
     }

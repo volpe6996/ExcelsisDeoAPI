@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ExcelsisDeo.Endpoints.Products;
 
-public record GetAllProductsByCategoryIdPaginatedRequestBody(string categoryId, int pageNumber) : IRequest;
+// public record GetAllProductsByCategoryIdPaginatedRequestBody(string categoryId, int pageNumber) : IRequest;
+public record GetAllProductsByCategoryIdPaginatedRequestBody(string categoryId, int pageSize, int pageNumber) : IRequest;
 
 public class GetAllProductsByCategoryIdPaginatedEndpoint : IEndpoint
 {
@@ -17,6 +18,7 @@ public class GetAllProductsByCategoryIdPaginatedEndpoint : IEndpoint
                         CancellationToken cancellationToken)
                     => await (getAllProductsByCategoryIdPaginatedRequestHandler.HandleAsync(getAllProductsByCategoryIdPaginatedRequestBody, cancellationToken)))
             // .RequireAuthorization(AuthorizationPolicy.Admin)
+            .WithTags("Products")
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest);
     }
@@ -34,7 +36,7 @@ public class GetAllProductsByCategoryIdPaginatedRequestHandler
 
     public async ValueTask<IResult> HandleAsync(GetAllProductsByCategoryIdPaginatedRequestBody request, CancellationToken cancellationToken)
     {
-        var pageSize = 5;
+        var pageSize = request.pageSize;
         var toSkip = (request.pageNumber - 1) * pageSize;
         
         Guid categoryId = Guid.Empty;

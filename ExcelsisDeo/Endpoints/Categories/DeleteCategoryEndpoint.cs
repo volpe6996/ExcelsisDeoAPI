@@ -19,6 +19,7 @@ public class DeleteCategoryEndpoint : IEndpoint
                         [FromServices] IRequestHandler<DeleteCategoryRequestBody> deleteCategoryRequestHandler,
                         CancellationToken cancellationToken)
                     => await (deleteCategoryRequestHandler.HandleAsync(deleteCategoryRequestBody, cancellationToken)))
+            .WithTags("Categoires")
             .RequireAuthorization(AuthorizationPolicy.Admin)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)

@@ -12,6 +12,7 @@ public class GetAllCategoriesEndpoint : IEndpoint
         endpoint.MapGet("/api/category/",
                 async ([FromServices] IRequestHandler getAllCategoriesHandler, CancellationToken cancellationToken)
                     => await (getAllCategoriesHandler.HandleAsync(cancellationToken)))
+            .WithTags("Categoires")
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status204NoContent);
     }

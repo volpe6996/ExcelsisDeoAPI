@@ -17,6 +17,7 @@ public class GetProductByIdEndpoint : IEndpoint
                         CancellationToken cancellationToken)
                     => await (getProductByIdRequestHandler.HandleAsync(getProductByIdRequestBody, cancellationToken)))
             // .RequireAuthorization(AuthorizationPolicy.Admin)
+            .WithTags("Products")
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
     }

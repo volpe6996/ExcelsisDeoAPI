@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ExcelsisDeo.Authentication;
 using ExcelsisDeo.Authorization;
 using ExcelsisDeo.Interfaces.Endpoints;
@@ -16,9 +17,11 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowCredentials();
+            policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowCredentials();
         });
 });
 
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.ConfigureValidation();
 builder.Services.ConfigurePersistence(builder.Configuration);
 builder.Services.ConfigureAuthentication(builder.Configuration);

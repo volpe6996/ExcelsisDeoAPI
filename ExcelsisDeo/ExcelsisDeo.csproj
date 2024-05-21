@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Endpoints\Baskets" />
     <Folder Include="Endpoints\Orders" />
     <Folder Include="Services\" />
   </ItemGroup>

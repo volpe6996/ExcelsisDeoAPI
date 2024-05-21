@@ -18,6 +18,7 @@ public class DeleteProductEndpoint : IEndpoint
                         [FromServices] IRequestHandler<DeleteProductRequestBody> deleteProductRequestHandler,
                         CancellationToken cancellationToken)
                     => await (deleteProductRequestHandler.HandleAsync(deleteProductRequestBody, cancellationToken)))
+            .WithTags("Products")
             .RequireAuthorization(AuthorizationPolicy.Admin)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent);
