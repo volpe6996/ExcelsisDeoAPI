@@ -56,7 +56,7 @@ public class AddBasketItemRequestHandler : IRequestHandler<AddBasketItemRequestB
         if (!doesProductExists)
             return Results.BadRequest("Produkt nie istnieje");
         
-        var isProductAlreadyAdded = await _dbContext.BasketItems.FirstOrDefaultAsync(b => b.ProductId == request.productId, cancellationToken);
+        var isProductAlreadyAdded = await _dbContext.BasketItems.FirstOrDefaultAsync(b => b.ProductId == request.productId && b.BasketId == basketId.Id, cancellationToken);
         if (isProductAlreadyAdded is not null)
         {
             isProductAlreadyAdded.Quantity = request.quantity;

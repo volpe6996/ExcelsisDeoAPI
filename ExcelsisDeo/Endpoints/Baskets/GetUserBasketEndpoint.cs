@@ -1,5 +1,6 @@
 using ExcelsisDeo.Interfaces;
 using ExcelsisDeo.Interfaces.Endpoints;
+using ExcelsisDeo.Persistence.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AuthorizationPolicy = ExcelsisDeo.Authorization.AuthorizationPolicy;
@@ -33,11 +34,17 @@ public class GetUserBasketRequestHandler : IRequestHandler<GetUserBasketRequestB
     }
 
     public async ValueTask<IResult> HandleAsync(GetUserBasketRequestBody request, CancellationToken cancellationToken)
-    {
-        var basket = await _dbContext.Baskets.FirstOrDefaultAsync(b => b.UserId == request.userId);
+    { 
+        var basket = await _dbContext.Baskets.FirstOrDefaultAsync(b => b.UserId == request.userId, cancellationToken);
 
+        // if user doesnt have their own basket yet
         if (basket is null)
-            return Results.BadRequest("Użytkownik nie istnieje");
+        {
+            await _dbContext.Baskets.AddAsync(new Basket() { UserId = request.userId });
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return Results.Ok();
+        }
         
         var basketItems = _dbContext.BasketItems.Where(b => b.BasketId == basket.Id).ToList();
 

@@ -16,8 +16,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: ExcelsisDeoOrigins,
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowCredentials();
-            policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowCredentials();
+            policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowCredentials().AllowAnyMethod();
+            policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowCredentials().AllowAnyMethod();
         });
 });
 
