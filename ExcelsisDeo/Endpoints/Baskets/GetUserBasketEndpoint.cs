@@ -43,7 +43,7 @@ public class GetUserBasketRequestHandler : IRequestHandler<GetUserBasketRequestB
             await _dbContext.Baskets.AddAsync(new Basket() { UserId = request.userId });
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return Results.Ok();
+            return Results.Ok("Koszyk utworzony");
         }
         
         var basketItems = _dbContext.BasketItems.Where(b => b.BasketId == basket.Id).ToList();
