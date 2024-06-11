@@ -14,9 +14,9 @@ namespace ExcelsisDeo.Authentication
             return BCrypt.Net.BCrypt.HashPassword(password, GetRandomSalt());
         }
 
-        public bool ValidatePassword(string password, string hashToValidate)
+        public bool ValidatePassword(string password, string? hashToValidate)
         {
-            return BCrypt.Net.BCrypt.Verify(password, hashToValidate);
+            return hashToValidate == null ? false : BCrypt.Net.BCrypt.Verify(password, hashToValidate);
         }
     }
 }

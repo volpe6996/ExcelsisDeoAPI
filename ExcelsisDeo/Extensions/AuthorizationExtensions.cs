@@ -2,7 +2,7 @@
 
 namespace ExcelsisDeo.Authorization
 {
-    internal static class Extensions
+    internal static class AuthorizationExtensions
     {
         public static void ConfigureAuthorization(this IServiceCollection services)
         {
@@ -11,12 +11,12 @@ namespace ExcelsisDeo.Authorization
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(AuthoriaztionPolicy.RegisteredUser, policy =>
+                options.AddPolicy(AuthorizationPolicy.RegisteredUser, policy =>
                 {
                     policy.AddRequirements(new RegisteredUserRoleRequirement());
                 });
 
-                options.AddPolicy(AuthoriaztionPolicy.Admin, policy =>
+                options.AddPolicy(AuthorizationPolicy.Admin, policy =>
                 {
                     policy.AddRequirements(new AdminRoleRequirement());
                 });

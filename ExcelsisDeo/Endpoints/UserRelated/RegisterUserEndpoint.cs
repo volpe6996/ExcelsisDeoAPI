@@ -9,17 +9,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExcelsisDeo.Endpoints
 {
-    public record RegisterRequestBody(string fullName, string email, string phoneNumber, string password) : IRequest;
+    public record RegisterRequestBody(string fullName, string email, string phoneNumber, string password, string city, string postalCode, string street) : IRequest;
 
     public class RegisterUserEndpoint : IEndpoint
     {
         public void Configure(IEndpointRouteBuilder endpoint)
         {
             endpoint.MapPost("/api/register/",
-                    async ([FromBody] RegisterRequestBody registerRequestBody,
+                    async ([AsParameters] RegisterRequestBody registerRequestBody,
                             [FromServices] IRequestHandler<RegisterRequestBody> registerRequestHandler,
                             CancellationToken cancellationToken)
                         => await (registerRequestHandler.HandleAsync(registerRequestBody, cancellationToken)))
+                .WithTags("Users")
                 .Produces(StatusCodes.Status204NoContent)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status409Conflict);
@@ -44,8 +45,9 @@ namespace ExcelsisDeo.Endpoints
             var validationResult = await  _validator.ValidateAsync(request);
 
             if (!validationResult.IsValid)
-                return Results.BadRequest(ValidationErrorPraser.Prase(validationResult.Errors));
-
+                // return Results.BadRequest(ValidationErrorPraser.Prase(validationResult.Errors));
+                return Results.BadRequest("Podane dane są nieprawidłowe, spróbuj ponownie!");
+                
             var isEmailAlreadyExists = await _appDbContext.Users.AnyAsync(u => u.Email == request.email, cancellationToken);
 
             if (isEmailAlreadyExists)
@@ -60,7 +62,17 @@ namespace ExcelsisDeo.Endpoints
                 PasswordHash = _passwordHasher.HashPassword(request.password),
             };
 
+            var adreess = new Address()
+            {
+                Id = Guid.NewGuid(),
+                City = request.city,
+                PostalCode = request.postalCode,
+                Street = request.street,
+                UserId = user.Id
+            };
+
             await _appDbContext.Users.AddAsync(user, cancellationToken);
+            await _appDbContext.Addresses.AddAsync(adreess, cancellationToken);
             await _appDbContext.SaveChangesAsync(cancellationToken);
 
             return Results.NoContent();
@@ -71,6 +83,9 @@ namespace ExcelsisDeo.Endpoints
     {
         public RegisterRequestBodyValidator()
         {
+            RuleFor(u => u.fullName)
+                .NotEmpty();
+            
             RuleFor(u => u.email)
                 .MaximumLength(48)
                 .Must(e => e.Any(IsAtSign))
@@ -88,6 +103,15 @@ namespace ExcelsisDeo.Endpoints
                 .Must(password => password.Any(char.IsDigit))
                 .Must(password => password.Any(IsSpecialChar))
                 .WithMessage("Zbyt słabe hasło");
+
+            RuleFor(u => u.city)
+                .NotEmpty();
+            
+            RuleFor(u => u.postalCode)
+                .NotEmpty();
+            
+            RuleFor(u => u.street)
+                .NotEmpty();
         }
 
         private bool IsSpecialChar(char c)

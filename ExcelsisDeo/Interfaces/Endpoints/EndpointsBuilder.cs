@@ -1,5 +1,6 @@
 ﻿using ExcelsisDeo.Endpoints;
 using System.Reflection;
+using ExcelsisDeo.Endpoints.Categories;
 
 namespace ExcelsisDeo.Interfaces.Endpoints
 {
@@ -20,7 +21,7 @@ namespace ExcelsisDeo.Interfaces.Endpoints
 
         public static IServiceCollection RegisterEndpointsHandlers(this IServiceCollection services)
         {
-            // services.AddScoped<IRequestHandler<RegisterRequestBody>, RegisterRequestHandler>();
+            services.AddScoped<IRequestHandler, GetAllCategoriesHandler>();
 
             var requestHandlerInterfaceType = typeof(IRequestHandler<>);
 

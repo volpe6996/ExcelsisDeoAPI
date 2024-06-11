@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExcelsisDeo.Authentication
 {
-    internal static class Extensions
+    internal static class AuthenticationExtensions
     {
         internal static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {

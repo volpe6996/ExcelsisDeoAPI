@@ -1,4 +1,6 @@
-﻿namespace ExcelsisDeo.Persistence.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace ExcelsisDeo.Persistence.Entities
 {
     public class Basket : AuditableEntity
     {
@@ -6,7 +8,7 @@
 
         public Guid UserId { get; init; }
         public User User { get; set; }
-
+        
         public virtual List<BasketItem> BasketItems { get; set; } = new();
     }
 
@@ -19,6 +21,7 @@
         public required uint Quantity { get; set; }
 
         public long BasketId { get; set; }
+        [JsonIgnore]
         public Basket Basket { get; set; }
     }
 }

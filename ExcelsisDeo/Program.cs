@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ExcelsisDeo.Authentication;
 using ExcelsisDeo.Authorization;
 using ExcelsisDeo.Interfaces.Endpoints;
@@ -8,6 +9,19 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var ExcelsisDeoOrigins = "_excelsisDeoOrigins"; 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: ExcelsisDeoOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowCredentials().AllowAnyMethod();
+            policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowCredentials().AllowAnyMethod();
+        });
+});
+
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.ConfigureValidation();
 builder.Services.ConfigurePersistence(builder.Configuration);
 builder.Services.ConfigureAuthentication(builder.Configuration);
@@ -26,6 +40,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(ExcelsisDeoOrigins);
 
 app.UseAuthentication();
 app.UseAuthorization();
